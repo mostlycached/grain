@@ -1,0 +1,82 @@
+name: grain
+options:
+  bundleIdPrefix: com.grain
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+  
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: minimal
+    ENABLE_USER_SCRIPT_SANDBOXING: false
+    
+targets:
+  grain:
+    type: application
+    platform: iOS
+    sources:
+      - path: grain/Sources
+        type: group
+    resources:
+      - path: grain/Resources
+        optional: true
+    info:
+      path: grain/Info.plist
+      properties:
+        CFBundleDisplayName: grain
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen:
+          UIColorName: ""
+          UIImageName: ""
+        NSMicrophoneUsageDescription: "grain needs microphone access for voice coaching"
+        NSCameraUsageDescription: "grain needs camera access for texture analysis"
+        NSLocationWhenInUseUsageDescription: "grain uses location to find nearby inventory"
+        NSLocationAlwaysAndWhenInUseUsageDescription: "grain monitors locations for proximity alerts"
+        NSSpeechRecognitionUsageDescription: "grain uses speech recognition for transcription"
+        NSCalendarsUsageDescription: "grain schedules missions to your calendar"
+        UIBackgroundModes:
+          - location
+          - fetch
+          - processing
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.grain.audioUpload
+          - com.grain.sessionProcessing
+          - com.grain.insightGeneration
+    entitlements:
+      path: grain/grain.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mostlycached.grain
+        INFOPLIST_FILE: grain/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+    dependencies:
+      - package: firebase-ios-sdk
+        products:
+          - FirebaseAuth
+          - FirebaseFirestore
+          - FirebaseFunctions
+          - FirebaseStorage
+          
+packages:
+  firebase-ios-sdk:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "11.0.0"
+
+schemes:
+  grain:
+    build:
+      targets:
+        grain: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
